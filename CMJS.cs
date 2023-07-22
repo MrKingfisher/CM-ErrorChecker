@@ -193,10 +193,10 @@ public class CMJS
             index += errors.all.Count;
         }
 
-        float? time = errors.all[index]?.note.SongBpmTime;
-        if (time != null)
+        float? songBpmTime = errors.all[index]?.note.SongBpmTime;
+        if (songBpmTime != null)
         {
-            atsc.MoveToTimeInBeats(time ?? 0);
+            atsc.MoveToSongBpmTime(songBpmTime ?? 0);
         }
 
         if (ui.problemInfoText != null)

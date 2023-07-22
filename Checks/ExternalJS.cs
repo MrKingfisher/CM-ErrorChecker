@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -188,11 +188,11 @@ internal class ExternalJS : Check
 
         var rArgs = new ReceivedArguments(vals);
         var atsc = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).AudioTimeSyncController;
-        var currentBeat = atsc.CurrentBeat;
+        var currentBeat = atsc.CurrentSongBpmTime;
 
         var collection =
             BeatmapObjectContainerCollection.GetCollectionForType<BPMChangeGridContainer>(ObjectType.BpmChange);
-        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentBeat);
+        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentSongBpmTime);
         var currentBPM = lastBpmEvent?.Bpm ?? atsc.Song.BeatsPerMinute;
 
         var originalNotes = notes.Select(it => new Note(engine, it)).ToArray();
