@@ -94,7 +94,7 @@ internal class CustomEvent : Wrapper<BaseCustomEvent>
     {
         if (spawned) return false;
 
-        collection.SpawnObject(wrapped, false, false);
+        collection.SpawnObject(wrapped, false, false, inCollectionOfSpawns: true);
 
         spawned = true;
         return true;
@@ -105,7 +105,7 @@ internal class CustomEvent : Wrapper<BaseCustomEvent>
         if (!spawned) return false;
 
         var collection = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.CustomEvent);
-        collection.DeleteObject(wrapped, false);
+        collection.DeleteObject(wrapped, false, inCollectionOfDeletes: true);
 
         spawned = false;
         return true;

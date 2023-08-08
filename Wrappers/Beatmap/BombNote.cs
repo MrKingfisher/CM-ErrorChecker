@@ -57,7 +57,7 @@ internal class BombNote : VanillaWrapper<BaseNote>
     {
         if (spawned) return false;
 
-        collection.SpawnObject(wrapped, false, false);
+        collection.SpawnObject(wrapped, false, false, inCollectionOfSpawns: true);
 
         spawned = true;
         return true;
@@ -68,7 +68,7 @@ internal class BombNote : VanillaWrapper<BaseNote>
         if (!spawned) return false;
 
         var collection = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note);
-        collection.DeleteObject(wrapped, false);
+        collection.DeleteObject(wrapped, false, inCollectionOfDeletes: true);
 
         spawned = false;
         return true;

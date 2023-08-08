@@ -135,7 +135,7 @@ internal class Chain : VanillaWrapper<BaseChain>
     {
         if (spawned) return false;
 
-        collection.SpawnObject(wrapped, false, false);
+        collection.SpawnObject(wrapped, false, false, inCollectionOfSpawns: true);
 
         spawned = true;
         return true;
@@ -146,7 +146,7 @@ internal class Chain : VanillaWrapper<BaseChain>
         if (!spawned) return false;
 
         var collection = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Chain);
-        collection.DeleteObject(wrapped, false);
+        collection.DeleteObject(wrapped, false, inCollectionOfDeletes: true);
 
         spawned = false;
         return true;

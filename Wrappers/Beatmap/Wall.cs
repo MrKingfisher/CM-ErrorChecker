@@ -140,7 +140,7 @@ internal class Wall : VanillaWrapper<BaseObstacle>
     {
         if (spawned) return false;
 
-        collection.SpawnObject(wrapped, false, false);
+        collection.SpawnObject(wrapped, false, false, inCollectionOfSpawns: true);
 
         spawned = true;
         return true;
@@ -151,7 +151,7 @@ internal class Wall : VanillaWrapper<BaseObstacle>
         if (!spawned) return false;
 
         var collection = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Obstacle);
-        collection.DeleteObject(wrapped, false);
+        collection.DeleteObject(wrapped, false, inCollectionOfDeletes: true);
 
         spawned = false;
         return true;

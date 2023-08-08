@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -374,6 +374,10 @@ internal class ExternalJS : Check
             beatmapActions.Add(new BeatmapObjectDeletionAction(wrapper.original, "Script deleted object"));
             wrapper.DeleteObject();
         }
+        if (!(collection is EventGridContainer))
+        {
+            collection.DoPostObjectsDeleteWorkflow();
+        }
 
         TimeLog("Spawn objects");
 
@@ -384,6 +388,7 @@ internal class ExternalJS : Check
 
             toAction.Add(note);
         }
+        collection.DoPostObjectsSpawnedWorkflow();
 
         TimeLog("Update selection");
 
