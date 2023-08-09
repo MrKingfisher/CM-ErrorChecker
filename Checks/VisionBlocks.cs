@@ -13,7 +13,7 @@ class VisionBlocks : Check
 
     public override CheckResult PerformCheck(List<BaseNote> notes, List<BaseNote> bombs, List<BaseArc> arcs,
         List<BaseChain> chains, List<BaseEvent> events, List<BaseObstacle> walls, List<BaseCustomEvent> customEvents,
-        List<BaseBpmEvent> BpmEvents, params KeyValuePair<string, IParamValue>[] vals)
+        List<BaseBpmEvent> bpmEvents, params KeyValuePair<string, IParamValue>[] vals)
     {
         if (vals.Length > 1)
         {

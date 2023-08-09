@@ -25,7 +25,7 @@ public class CMJS
     private ObstacleGridContainer wallsContainer;
     private EventGridContainer eventsContainer;
     private CustomEventGridContainer customEventsContainer;
-    private BPMChangeGridContainer BpmEventsContainer;
+    private BPMChangeGridContainer bpmEventsContainer;
     private List<Check> checks = new List<Check>()
     {
         new VisionBlocks(),
@@ -72,7 +72,7 @@ public class CMJS
             wallsContainer = UnityEngine.Object.FindObjectOfType<ObstacleGridContainer>();
             eventsContainer = UnityEngine.Object.FindObjectOfType<EventGridContainer>();
             customEventsContainer = UnityEngine.Object.FindObjectOfType<CustomEventGridContainer>();
-            BpmEventsContainer = UnityEngine.Object.FindObjectOfType<BPMChangeGridContainer>();
+            bpmEventsContainer = UnityEngine.Object.FindObjectOfType<BPMChangeGridContainer>();
             var mapEditorUI = UnityEngine.Object.FindObjectOfType<MapEditorUI>();
 
             atsc = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).AudioTimeSyncController;
@@ -126,7 +126,7 @@ public class CMJS
                 var allWalls = wallsContainer.LoadedObjects.Cast<BaseObstacle>().OrderBy(it => it.JsonTime).ToList();
                 var allEvents = eventsContainer.LoadedObjects.Cast<BaseEvent>().OrderBy(it => it.JsonTime).ToList();
                 var allCustomEvents = customEventsContainer.LoadedObjects.Cast<BaseCustomEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = BpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
+                var allBpmEvents = bpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
                 errors = check.PerformCheck(allNotes, allBombs, allArcs, allChains, allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
             } else
             {
@@ -134,7 +134,7 @@ public class CMJS
                 var allWalls = wallsContainer.LoadedObjects.Cast<BaseObstacle>().OrderBy(it => it.JsonTime).ToList();
                 var allEvents = eventsContainer.LoadedObjects.Cast<BaseEvent>().OrderBy(it => it.JsonTime).ToList();
                 var allCustomEvents = customEventsContainer.LoadedObjects.Cast<BaseCustomEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = BpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
+                var allBpmEvents = bpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
                 errors = check.PerformCheck(allNotes, new List<BaseNote>(), new List<BaseArc>(), new List<BaseChain>(), allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
             }
 

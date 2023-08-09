@@ -13,7 +13,7 @@ internal class BpmEvent : Wrapper<BaseBpmEvent>
 
     public BpmEvent(Engine engine, ObjectInstance o) : base(engine, BeatmapFactory.BpmEvent(
         (float)GetJsValue(o, new[] { "b", "_time" }),
-        (float)GetJsValue(o, new[] { "m", "_BPM" })
+        (float)GetJsValue(o, new[] { "m", "_floatValue" })
     ), false, GetJsBool(o, "selected"))
     {
         spawned = false;
