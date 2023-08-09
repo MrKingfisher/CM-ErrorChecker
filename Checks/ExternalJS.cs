@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -234,8 +234,6 @@ internal class ExternalJS : Check
                 ))
                 .SetValue("args", rArgs)
                 .SetValue("cursor", currentBeat)
-                .SetValue("minTime", 0.24f)
-                .SetValue("maxTime", 0.75f)
                 .SetValue("addError", new Action<object, string>((dynamic note, string str) =>
                 {
                     var obj = FromDynamic(note, notes);

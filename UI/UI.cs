@@ -190,9 +190,6 @@ public class UI
         paramContainer.transform.parent = popup.transform;
         AttachTransform(paramContainer, 200, 151, 0.5f, 0.5f, 0, 0);
 
-        AddEntry("Min Time", -54, "0.24");
-        AddEntry("Max Time", -77, "0.75");
-
         ////////
 
         navigation.Clear();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,8 +28,7 @@ public class CMJS
     private BPMChangeGridContainer bpmEventsContainer;
     private List<Check> checks = new List<Check>()
     {
-        new VisionBlocks(),
-        new StackedNotes()
+        new EmptyCheck()
     };
     private CheckResult errors;
     private UI ui;
