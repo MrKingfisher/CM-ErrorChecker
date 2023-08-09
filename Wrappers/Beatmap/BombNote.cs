@@ -12,9 +12,9 @@ internal class BombNote : VanillaWrapper<BaseNote>
     }
 
     public BombNote(Engine engine, ObjectInstance o) : base(engine, BeatmapFactory.Bomb(
-        (float)GetJsValue(o, "b"),
-        (int)GetJsValue(o, "x"),
-        (int)GetJsValue(o, "y"),
+        (float)GetJsValue(o, new[] { "b", "_time" }),
+        (int)GetJsValue(o, new[] { "x", "_lineIndex" }),
+        (int)GetJsValue(o, new[] { "y", "_lineLayer" }),
         GetCustomData(o, new[] { "customData", "_customData" })
     ), false, GetJsBool(o, "selected"))
     {
