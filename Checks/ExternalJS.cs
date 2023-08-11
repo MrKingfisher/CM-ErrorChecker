@@ -192,7 +192,7 @@ internal class ExternalJS : Check
 
         var collection =
             BeatmapObjectContainerCollection.GetCollectionForType<BPMChangeGridContainer>(ObjectType.BpmChange);
-        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentJsonTime);
+        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentSongBpmTime);
         var currentBPM = lastBpmEvent?.Bpm ?? atsc.Song.BeatsPerMinute;
 
         var originalNotes = notes.Select(it => new Note(engine, it)).ToArray();
