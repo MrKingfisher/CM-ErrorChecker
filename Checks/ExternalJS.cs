@@ -188,11 +188,11 @@ internal class ExternalJS : Check
 
         var rArgs = new ReceivedArguments(vals);
         var atsc = BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).AudioTimeSyncController;
-        var currentBeat = atsc.CurrentSongBpmTime;
+        var currentBeat = atsc.CurrentJsonTime;
 
         var collection =
             BeatmapObjectContainerCollection.GetCollectionForType<BPMChangeGridContainer>(ObjectType.BpmChange);
-        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentSongBpmTime);
+        var lastBpmEvent = collection.FindLastBpm(atsc.CurrentJsonTime);
         var currentBPM = lastBpmEvent?.Bpm ?? atsc.Song.BeatsPerMinute;
 
         var originalNotes = notes.Select(it => new Note(engine, it)).ToArray();
