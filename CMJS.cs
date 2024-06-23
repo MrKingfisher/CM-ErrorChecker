@@ -28,7 +28,7 @@ public class CMJS
     private BPMChangeGridContainer bpmEventsContainer;
     private List<Check> checks = new List<Check>()
     {
-        new EmptyCheck()
+        // Handle yourself...
     };
     private CheckResult errors;
     private UI ui;
@@ -36,16 +36,36 @@ public class CMJS
     private int index = 0;
     private bool movedAfterRun = false;
 
+    private const string JsScriptDirectory = "CM-JsScripts";
+    private const string DefaultJsScript = "cmjsupdate.js";
+
     [Init]
     private void Init()
     {
+        // Standardsize directory creation for js scripts.
+        EnsureJsScriptDirectoryExists();
         SceneManager.sceneLoaded += SceneLoaded;
 
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string jsPluginsFolder = Path.Combine(assemblyFolder, JsScriptDirectory);
+        // depreciate load of JS scripts directly from plugins folder directly, 
+
         foreach (string file in Directory.GetFiles(assemblyFolder, "*.js"))
-        {
-            checks.Add(new ExternalJS(Path.GetFileName(file)));
+        {   // Yes we relocate them to new folder right before loading them
+            string fileName = Path.GetFileName(file);
+            // Construct the destination file path
+            string destFilePath = Path.Combine(jsPluginsFolder, fileName);
+            try
+            {
+                File.Move(file, destFilePath);
+            }
+            catch (IOException IOError) { Debug.LogError("IOException: thrown while trying to relocate script from: " + file + " To " + jsPluginsFolder + " <- this foler");
+                Debug.LogError(IOError.Message);
+            }
+            continue; // Warn user about potential duplicate scripts so they  themselves can handle it
         }
+
+        LoadPlugins(jsPluginsFolder);
 
         ui = new UI(this, checks);
 
@@ -58,6 +78,31 @@ public class CMJS
             Debug.LogError("Failed to patch Jint during CM-JS init");
             Debug.LogException(e);
             Debug.LogException(e.InnerException);
+        }
+    }
+    private void EnsureJsScriptDirectoryExists()
+    {
+        // bruh this is kinda. DRY.... BADUM TSSSS.....
+        string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string JsScriptDirectory = Path.Combine(assemblyFolder, "CM-JsScripts");
+        if (!Directory.Exists(JsScriptDirectory))
+        {
+            Directory.CreateDirectory(JsScriptDirectory);
+            // we will only create this js script if folder does not exist
+            string defaultScriptPath = Path.Combine(JsScriptDirectory, DefaultJsScript);
+            string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JsScripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
+
+            File.WriteAllText(defaultScriptPath, defaultScriptContent);
+        }
+    }
+
+    // TODO: allow an option to perhaps specify own folder for javascripts to be loaded from?
+    private void LoadPlugins(string directory)
+    {
+        // loads javascripts from a new folder inside of plugins folder. AFTER  4 YEARS! Structure i guess
+        foreach (string file in Directory.GetFiles(directory, "*.js"))
+        {
+            checks.Add(new ExternalJS(file));
         }
     }
 
@@ -84,6 +129,7 @@ public class CMJS
     public void CheckErrors(Check check)
     {
         bool isV3 = Settings.Instance.Load_MapV3;
+
 
         if (errors != null)
         {
