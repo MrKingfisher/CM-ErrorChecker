@@ -64,21 +64,8 @@ public class CMJS
             }
             continue; // Warn user about potential duplicate scripts so they  themselves can handle it
         }
-
-        LoadPlugins(jsPluginsFolder);
-
-        ui = new UI(this, checks);
-
-        try
-        {
-            JintPatch.DoPatching();
-        }
-        catch (HarmonyException e)
-        {
-            Debug.LogError("Failed to patch Jint during CM-JS init");
-            Debug.LogException(e);
-            Debug.LogException(e.InnerException);
-        }
+        LoadJavaScripts(jsPluginsFolder);
+      
     }
     // Litterly in the name
     public string GetJsScriptFolder()
@@ -97,18 +84,31 @@ public class CMJS
             // we will only create this js script if folder does not exist
             string defaultScriptPath = Path.Combine(JsScriptDirectory, DefaultJsScript);
             string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JsScripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
-
             File.WriteAllText(defaultScriptPath, defaultScriptContent);
         }
     }
 
     // TODO: allow an option to perhaps specify own folder for javascripts to be loaded from?
-    private void LoadPlugins(string directory)
+    private void LoadJavaScripts(string directory)
     {
         // loads javascripts from a new folder inside of plugins folder. AFTER  4 YEARS! Structure i guess
         foreach (string file in Directory.GetFiles(directory, "*.js"))
         {
             checks.Add(new ExternalJS(file));
+        }
+        
+        // Relocated here for some reason
+        ui = new UI(this, checks);
+
+        try
+        {
+            JintPatch.DoPatching();
+        }
+        catch (HarmonyException e)
+        {
+            Debug.LogError("Failed to patch Jint during CM-JS init");
+            Debug.LogException(e);
+            Debug.LogException(e.InnerException);
         }
     }
 
