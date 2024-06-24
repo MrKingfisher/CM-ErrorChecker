@@ -97,19 +97,21 @@ internal class ExternalJS : Check
 
     private void LoadJS()
     {
-        // Ugly way of handling new folder for ExternalJS
+        // slightly nicer way to get folderpath
+
+        CMJS cMJS = new CMJS();
+        var jsScriptFolder = cMJS.GetJsScriptFolder();
         engine = new Engine(options => { options.Constraint(timeConstraint).LimitRecursion(200); });
-        var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var jsPluginsFolder = Path.Combine(assemblyFolder, "CM-JsScripts");
-        
-        var streamReader = new StreamReader(Path.Combine(jsPluginsFolder, fileName));
+
+
+        var streamReader = new StreamReader(Path.Combine(jsScriptFolder, fileName));
         var script = streamReader.ReadToEnd();
         streamReader.Close();
 
         try
         {
             engine
-                .SetValue("require", new Func<string, JsValue>(Bind<string, string, JsValue>(require, jsPluginsFolder)))
+                .SetValue("require", new Func<string, JsValue>(Bind<string, string, JsValue>(require, jsScriptFolder)))
                 .SetValue("log", new Action<object>(LogIt))
                 .SetValue("alert", new Action<string>(Alert))
                 .Execute("module = {exports: {}}; console = {log: log}; var global = {};")
@@ -161,6 +163,7 @@ internal class ExternalJS : Check
             Debug.LogWarning($"Error loading {fileName}\n{jse.Message}");
         }
     }
+
     private void startEngine() { 
     }
 
