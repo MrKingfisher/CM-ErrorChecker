@@ -36,19 +36,19 @@ public class CMJS
     private int index = 0;
     private bool movedAfterRun = false;
 
-    private const string JsScriptDirectory = "CM-JsScripts";
-    private const string DefaultJsScript = "cmjsupdate.js";
+    protected const string JsScriptDirectory = "CM-JS-Scripts";
+    protected const string DefaultJsScript = "cmjsupdate.js";
 
     [Init]
     private void Init()
     {
-        // Standardsize directory creation for js scripts.
+        // Standardize directory creation for java Scripts.
         EnsureJsScriptDirectoryExists();
         SceneManager.sceneLoaded += SceneLoaded;
 
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string jsPluginsFolder = Path.Combine(assemblyFolder, JsScriptDirectory);
-        // depreciate load of JS scripts directly from plugins folder directly, 
+        string jsPluginsFolder = GetJsScriptFolder();
+        // deprecate load of JS scripts directly from plugins folder directly, 
 
         foreach (string file in Directory.GetFiles(assemblyFolder, "*.js"))
         {   // Yes we relocate them to new folder right before loading them
@@ -59,7 +59,7 @@ public class CMJS
             {
                 File.Move(file, destFilePath);
             }
-            catch (IOException IOError) { Debug.LogError("IOException: thrown while trying to relocate script from: " + file + " To " + jsPluginsFolder + " <- this foler");
+            catch (IOException IOError) { Debug.LogError("IOException: thrown while trying to relocate script from: " + file + " to " + jsPluginsFolder + " <- this folder");
                 Debug.LogError(IOError.Message);
             }
             continue; // Warn user about potential duplicate scripts so they  themselves can handle it
@@ -80,11 +80,17 @@ public class CMJS
             Debug.LogException(e.InnerException);
         }
     }
+    // Litterly in the name
+    public string GetJsScriptFolder()
+    {
+        string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        return Path.Combine(assemblyFolder, JsScriptDirectory);
+    }
+
     private void EnsureJsScriptDirectoryExists()
     {
-        // bruh this is kinda. DRY.... BADUM TSSSS.....
-        string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string JsScriptDirectory = Path.Combine(assemblyFolder, "CM-JsScripts");
+        // Cleaner handling when we want the path for JsScriptDirectory
+        string JsScriptDirectory = GetJsScriptFolder();
         if (!Directory.Exists(JsScriptDirectory))
         {
             Directory.CreateDirectory(JsScriptDirectory);
