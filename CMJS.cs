@@ -170,22 +170,22 @@ public class CMJS
             if (isV3)
             {
                 // TODO: since containers has multiple different object, check events and notes
-                var allNotes = notesContainer.LoadedObjects.Where(it => it is V3ColorNote).Cast<BaseNote>().OrderBy(it => it.JsonTime).ToList();
-                var allBombs = notesContainer.LoadedObjects.Where(it => it is V3BombNote).Cast<BaseNote>().OrderBy(it => it.JsonTime).ToList();
-                var allArcs = arcsContainer.LoadedObjects.Cast<BaseArc>().OrderBy(it => it.JsonTime).ToList();
-                var allChains = chainsContainer.LoadedObjects.Cast<BaseChain>().OrderBy(it => it.JsonTime).ToList();
-                var allWalls = wallsContainer.LoadedObjects.Cast<BaseObstacle>().OrderBy(it => it.JsonTime).ToList();
-                var allEvents = eventsContainer.LoadedObjects.Cast<BaseEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allCustomEvents = customEventsContainer.LoadedObjects.Cast<BaseCustomEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = bpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
+                var allNotes = notesContainer.MapObjects.Where(it => it is V3ColorNote).OrderBy(it => it.JsonTime).ToList();
+                var allBombs = notesContainer.MapObjects.Where(it => it is V3BombNote).OrderBy(it => it.JsonTime).ToList();
+                var allArcs = arcsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allChains = chainsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
                 errors = check.PerformCheck(allNotes, allBombs, allArcs, allChains, allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
             } else
             {
-                var allNotes = notesContainer.LoadedObjects.Cast<BaseNote>().OrderBy(it => it.JsonTime).ToList();
-                var allWalls = wallsContainer.LoadedObjects.Cast<BaseObstacle>().OrderBy(it => it.JsonTime).ToList();
-                var allEvents = eventsContainer.LoadedObjects.Cast<BaseEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allCustomEvents = customEventsContainer.LoadedObjects.Cast<BaseCustomEvent>().OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = bpmEventsContainer.LoadedObjects.Cast<BaseBpmEvent>().OrderBy(it => it.JsonTime).ToList();
+                var allNotes = notesContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+                var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
                 errors = check.PerformCheck(allNotes, new List<BaseNote>(), new List<BaseArc>(), new List<BaseChain>(), allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
             }
 
