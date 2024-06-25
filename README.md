@@ -6,18 +6,9 @@ Simple plugin that adds an error checker to [ChroMapper](https://github.com/Caed
 
 Download the latest release, place the entire folder in your `ChroMapper/Plugins` directory
 
-### Built-in plugins
-
-- Vision Blocks
-  - Copy of the logic in MMA2's error checker
-  - Finds blocks that are obscured by blocks in the center two positions
-- Stacked Blocks
-  - Finds blocks that may be overlapping
-  - Looks for notes less than 0.1 beats of each other in the same position
-
 ### JS Checks
 
-You can add more error check types directly by placing javascript files in the same directory as the plugin.
+You can add more error check types directly by placing javascript files in the `CM-JS-Scripts` directory at the same level as the plugin.
 
 The parser uses [Jint 3 (beta)](https://github.com/sebastienros/jint/issues/343) and [esprima](https://github.com/sebastienros/esprima-dotnet) which can parse ES6 but not all features are supported, for instance esprima can parse `class` but Jint will throw an exception so you'll have to rewrite these as old-style functions and prototypes
 

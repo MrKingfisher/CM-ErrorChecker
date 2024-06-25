@@ -169,7 +169,7 @@ public class UI
 
         popup = new GameObject("ErrorChecker Popup");
         popup.transform.parent = parent.transform;
-
+        // This blocks note visualizer grid, should relocate CMJS like how Paulmapper & Prop edit does
         AttachTransform(popup, 220, 151, 0, 1, 5, -5, 0, 1);
         var image = popup.AddComponent<Image>();
 

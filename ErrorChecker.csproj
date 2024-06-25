@@ -219,9 +219,6 @@
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(ChromapperDir)\ChroMapper_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>$(UnityScriptAssemblies)\Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(ChromapperDir)\ChroMapper_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
