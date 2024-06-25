@@ -164,9 +164,6 @@ internal class ExternalJS : Check
         }
     }
 
-    private void startEngine() { 
-    }
-
     public override void OnSelected()
     {
         if (!valid) LoadJS();
