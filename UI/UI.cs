@@ -10,6 +10,7 @@ public class UI
 {
     private GameObject popup;
     private TMP_Dropdown dropdownComponent;
+    protected string jsScriptFolder = CMJS.GetJsScriptFolder();
 
     private readonly CMJS plugin;
     private readonly List<Check> checks;
@@ -180,8 +181,29 @@ public class UI
         AddDropdown(popup);
 
         GenerateButton(popup.transform, "Reload", PersistentUI.Instance.Sprites.Reload, new Vector2(95, -23), () => {
-            checks[dropdownComponent.value].Reload();
-            UpdateSelected(dropdownComponent.value);
+            try
+            {
+                int selectedIndex = dropdownComponent.value;
+                if (selectedIndex >= 0 && selectedIndex < checks.Count)
+                {
+                    checks[dropdownComponent.value].Reload();
+                    UpdateSelected(dropdownComponent.value);
+                }
+                else
+                {   // in theory we should not log it as a error, but its in read text screaming at use for good reason
+                    Debug.LogError($"HEY!!!!: \n STOP TRYING TO RELOAD Scripts that does not exist.\n please check/add scripts to this folder: " + jsScriptFolder);
+                }
+            }
+            catch (System.ArgumentOutOfRangeException aoe)
+            {
+                Debug.LogError($"ArgumentOutOfRangeException caught: {aoe.Message}\n " + aoe.StackTrace);
+            }
+            catch (System.Exception ex)
+            {
+                // Fuck. its me again (»Mr.Kingfisher«)
+                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded thi!");
+            }
+
         }, new Vector2(22, 25));
 
         ////////
@@ -193,10 +215,31 @@ public class UI
         ////////
 
         navigation.Clear();
-
         navigation.Add(GenerateButton(popup.transform, "Perform", "Run", new Vector2(0, -105), () => {
-            plugin.CheckErrors(checks[dropdownComponent.value]);
+            try
+            {
+                int selectedIndex = dropdownComponent.value;
+                if (selectedIndex >= 0 && selectedIndex < checks.Count)
+                {
+                    plugin.CheckErrors(checks[selectedIndex]);
+                }
+                else
+                {
+                    Debug.LogError($"HEY!!!!: \n Are you sure you have any scripts?\n please check: " + jsScriptFolder);
+                }
+            }
+            // i wonder how users will manage to trigger this
+            catch (System.ArgumentOutOfRangeException aoe) 
+            {
+                Debug.LogError($"ArgumentOutOfRangeException caught: {aoe.Message}\n " + aoe.StackTrace);
+            }
+            catch (System.Exception ex) 
+            {
+                // Fuck. i wrote this (»Mr.Kingfisher«)
+                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded thi!");
+            }
         }));
+
 
         navigation.Add(GenerateButton(popup.transform, "Previous", "<", new Vector2(-50, -105), () => {
             plugin.NextBlock(-1);
