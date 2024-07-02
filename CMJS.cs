@@ -38,6 +38,7 @@ public class CMJS
 
     protected const string JsScriptDirectory = "CM-JS-Scripts";
     protected const string DefaultJsScript = "cmjsupdate.js";
+    private readonly string jsPluginsFolder = GetJsScriptFolder();
 
     [Init]
     private void Init()
@@ -47,9 +48,8 @@ public class CMJS
         SceneManager.sceneLoaded += SceneLoaded;
 
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string jsPluginsFolder = GetJsScriptFolder();
+        
         // deprecate load of JS scripts directly from plugins folder directly, 
-
         foreach (string file in Directory.GetFiles(assemblyFolder, "*.js"))
         {   // Yes we relocate them to new folder right before loading them
             string fileName = Path.GetFileName(file);
@@ -68,7 +68,7 @@ public class CMJS
       
     }
     // Litterly in the name
-    public string GetJsScriptFolder()
+    public static string GetJsScriptFolder()
     {
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         return Path.Combine(assemblyFolder, JsScriptDirectory);
@@ -136,7 +136,6 @@ public class CMJS
     {
         bool isV3 = Settings.Instance.Load_MapV3;
 
-
         if (errors != null)
         {
             // Remove error outline from old errors
@@ -149,7 +148,7 @@ public class CMJS
                 }
             }
         }
-
+       
         try
         {
             var vals = ui.paramTexts.Select((it, idx) =>
