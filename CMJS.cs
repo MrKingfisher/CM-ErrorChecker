@@ -83,7 +83,7 @@ public class CMJS
             Directory.CreateDirectory(JsScriptDirectory);
             // we will only create this js script if folder does not exist
             string defaultScriptPath = Path.Combine(JsScriptDirectory, DefaultJsScript);
-            string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JsScripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
+            string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JS-Scripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
             File.WriteAllText(defaultScriptPath, defaultScriptContent);
         }
     }
