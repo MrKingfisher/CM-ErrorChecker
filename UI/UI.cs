@@ -201,7 +201,7 @@ public class UI
             catch (System.Exception ex)
             {
                 // Fuck. its me again (»Mr.Kingfisher«)
-                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded thi!");
+                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded this!");
             }
 
         }, new Vector2(22, 25));
@@ -236,7 +236,7 @@ public class UI
             catch (System.Exception ex) 
             {
                 // Fuck. i wrote this (»Mr.Kingfisher«)
-                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded thi!");
+                Debug.LogError($"An unexpected exception occurred: {ex.Message} \n {ex.StackTrace}\n you should report this to whoever coded this!");
             }
         }));
 
