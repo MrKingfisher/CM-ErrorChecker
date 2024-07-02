@@ -27,6 +27,9 @@ internal class ExternalJS : Check
     private Engine engine;
     private bool valid;
 
+    protected string jsScriptFolder = CMJS.GetJsScriptFolder();
+
+
     public ExternalJS(string fileName)
     {
         this.fileName = fileName;
@@ -99,10 +102,7 @@ internal class ExternalJS : Check
     {
         // slightly nicer way to get folderpath
 
-        CMJS cMJS = new CMJS();
-        var jsScriptFolder = cMJS.GetJsScriptFolder();
         engine = new Engine(options => { options.Constraint(timeConstraint).LimitRecursion(200); });
-
 
         var streamReader = new StreamReader(Path.Combine(jsScriptFolder, fileName));
         var script = streamReader.ReadToEnd();
@@ -207,12 +207,12 @@ internal class ExternalJS : Check
         var originalEvents = events.Select(it => new Event(engine, it)).ToArray();
         var originalCustomEvents = customEvents.Select(it => new CustomEvent(engine, it)).ToArray();
         var originalBpmEvents = bpmEvents.Select(it => new BpmEvent(engine, it)).ToArray();
-
+       
         try
         {
             TimeLog("Init");
-
-            var tmp = engine
+            
+           var tmp = engine
                 .SetValue("notes", originalNotes)
                 .SetValue("bombs", originalBombs)
                 .SetValue("arcs", originalArcs)

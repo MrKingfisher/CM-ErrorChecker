@@ -38,6 +38,7 @@ public class CMJS
 
     protected const string JsScriptDirectory = "CM-JS-Scripts";
     protected const string DefaultJsScript = "cmjsupdate.js";
+    private readonly string jsPluginsFolder = GetJsScriptFolder();
 
     [Init]
     private void Init()
@@ -47,9 +48,8 @@ public class CMJS
         SceneManager.sceneLoaded += SceneLoaded;
 
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string jsPluginsFolder = GetJsScriptFolder();
+        
         // deprecate load of JS scripts directly from plugins folder directly, 
-
         foreach (string file in Directory.GetFiles(assemblyFolder, "*.js"))
         {   // Yes we relocate them to new folder right before loading them
             string fileName = Path.GetFileName(file);
@@ -68,7 +68,7 @@ public class CMJS
       
     }
     // Litterly in the name
-    public string GetJsScriptFolder()
+    public static string GetJsScriptFolder()
     {
         string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         return Path.Combine(assemblyFolder, JsScriptDirectory);
@@ -83,7 +83,7 @@ public class CMJS
             Directory.CreateDirectory(JsScriptDirectory);
             // we will only create this js script if folder does not exist
             string defaultScriptPath = Path.Combine(JsScriptDirectory, DefaultJsScript);
-            string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JsScripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
+            string defaultScriptContent = @"function performCheck(r) { return alert(""all your Chromapper JavaScripts are now all loaded/moved into: \n 'chromapper\\Plugins\\CM-JS-Scripts'. ;)""),null}module.exports={name:""CM-ScriptUpdateNotice"",params:{},run:performCheck};";
             File.WriteAllText(defaultScriptPath, defaultScriptContent);
         }
     }
@@ -136,7 +136,6 @@ public class CMJS
     {
         bool isV3 = Settings.Instance.Load_MapV3;
 
-
         if (errors != null)
         {
             // Remove error outline from old errors
@@ -149,7 +148,7 @@ public class CMJS
                 }
             }
         }
-
+       
         try
         {
             var vals = ui.paramTexts.Select((it, idx) =>
