@@ -41,14 +41,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Acornima, Version=1.1.1.0, Culture=neutral, PublicKeyToken=496b38436bb9edeb, processorArchitecture=MSIL">
+      <HintPath>packages\Acornima.1.1.1\lib\net462\Acornima.dll</HintPath>
+    </Reference>
     <Reference Include="Costura, Version=5.8.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>packages\Costura.Fody.5.8.0-alpha0098\lib\netstandard1.0\Costura.dll</HintPath>
     </Reference>
-    <Reference Include="Esprima, Version=3.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>packages\Esprima.3.0.0-beta-9\lib\net462\Esprima.dll</HintPath>
+    <Reference Include="Esprima, Version=3.0.5.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>packages\Esprima.3.0.5\lib\net462\Esprima.dll</HintPath>
     </Reference>
-    <Reference Include="Jint, Version=3.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>packages\Jint.3.0.0-beta-2044\lib\net462\Jint.dll</HintPath>
+    <Reference Include="Jint, Version=4.2.1.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>packages\Jint.4.2.1\lib\net462\Jint.dll</HintPath>
     </Reference>
     <Reference Include="Main">
       <HintPath>$(ChromapperDir)\ChroMapper_Data\Managed\Main.dll</HintPath>
@@ -249,8 +252,6 @@
     <Compile Include="Checks\CheckResult.cs" />
     <Compile Include="Checks\ExternalJS.cs" />
     <Compile Include="Checks\Params.cs" />
-    <Compile Include="Checks\StackedNotes.cs" />
-    <Compile Include="Checks\VisionBlocks.cs" />
     <Compile Include="CMJS.cs" />
     <Compile Include="JintPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
