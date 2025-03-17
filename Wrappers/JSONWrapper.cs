@@ -204,11 +204,11 @@ class JSONWrapper
         if (node.IsArray)
         {
             var asArr = node.AsArray;
-            var nativeArr = engine.Realm.Intrinsics.Array.Construct(0);
+            var nativeArr = engine.Intrinsics.Array.Construct(0);
 
             foreach (var kv in asArr.Values)
             {
-                engine.Realm.Intrinsics.Array.PrototypeObject.Push(nativeArr, new[] { JSONToJS(kv) });
+                engine.Intrinsics.Array.PrototypeObject.Push(nativeArr, new[] { JSONToJS(kv) });
             }
 
             return nativeArr;
@@ -226,7 +226,7 @@ class JSONWrapper
 
         if (node.IsObject)
         {
-            var obj = engine.Realm.Intrinsics.Object.Construct(new JsValue[0]);
+            var obj = engine.Intrinsics.Object.Construct(new JsValue[0]);
             foreach (var kv in node)
             {
                 obj.Set(kv.Key, JSONToJS(kv.Value));
