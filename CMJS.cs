@@ -4,13 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Beatmap.Base;
-using Beatmap.Base.Customs;
 using Beatmap.Containers;
 using Beatmap.Enums;
-using Beatmap.V2;
-using Beatmap.V2.Customs;
-using Beatmap.V3;
-using Beatmap.V3.Customs;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -134,7 +129,7 @@ public class CMJS
 
     public void CheckErrors(Check check)
     {
-        bool isV3 = Settings.Instance.Load_MapV3;
+        int mapVersion  = Settings.Instance.MapVersion;
 
         if (errors != null)
         {
@@ -148,79 +143,92 @@ public class CMJS
                 }
             }
         }
-       
-        try
+
+        var vals = ui.paramTexts.Select((it, idx) =>
         {
-            var vals = ui.paramTexts.Select((it, idx) =>
+            switch (it)
             {
-                switch (it)
-                {
-                    case UITextInput textInput:
-                        return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(textInput.InputField.text));
-                    case UIDropdown dropdown:
-                        return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(dropdown.Dropdown.value.ToString()));
-                    case Toggle toggle:
-                        return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(toggle.isOn.ToString()));
-                    default:
-                        return new KeyValuePair<string, IParamValue>(check.Params[idx].name, new ParamValue<string>(null)); // IDK
-                }
-            }).ToArray();
+                case UITextInput textInput:
+                    return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(textInput.InputField.text));
+                case UIDropdown dropdown:
+                    return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(dropdown.Dropdown.value.ToString()));
+                case Toggle toggle:
+                    return new KeyValuePair<string, IParamValue>(check.Params[idx].name, check.Params[idx].Parse(toggle.isOn.ToString()));
+                default:
+                    return new KeyValuePair<string, IParamValue>(check.Params[idx].name, new ParamValue<string>(null)); // IDK
+            }
+        }).ToArray();
 
-            if (isV3)
+        if (mapVersion == 3)
+        {
+            // Convert manually,
+            var allNotes = notesContainer.MapObjects.Where(
+                it => it is BaseNote baseNote && baseNote.Type != 3).OrderBy(it => it.JsonTime).ToList();
+            var allBombs = notesContainer.MapObjects.Where(
+                it => it is BaseNote baseNote && baseNote.Type is 3).OrderBy(it => it.JsonTime).ToList();
+            var allArcs = arcsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allChains = chainsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            // this try catch could be removed but i kept it for now.
+            try
             {
-                // TODO: since containers has multiple different object, check events and notes
-                var allNotes = notesContainer.MapObjects.Where(it => it is V3ColorNote).OrderBy(it => it.JsonTime).ToList();
-                var allBombs = notesContainer.MapObjects.Where(it => it is V3BombNote).OrderBy(it => it.JsonTime).ToList();
-                var allArcs = arcsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allChains = chainsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
                 errors = check.PerformCheck(allNotes, allBombs, allArcs, allChains, allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
-            } else
-            {
-                var allNotes = notesContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
-                errors = check.PerformCheck(allNotes, new List<BaseNote>(), new List<BaseArc>(), new List<BaseChain>(), allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
             }
-
-            // Highlight blocks in loaded containers in case we don't scrub far enough with MoveToTimeInBeats to load them
-            foreach (var block in errors.errors)
+            catch (Exception e)
             {
-                if (BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).LoadedContainers.TryGetValue(block.note, out ObjectContainer container))
-                {
-                    container.SetOutlineColor(Color.red);
-                }
+                Debug.LogException(e);
+                throw;
             }
-
-            foreach (var block in errors.warnings)
-            {
-                if (BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).LoadedContainers.TryGetValue(block.note, out ObjectContainer container))
-                {
-                    container.SetOutlineColor(Color.yellow);
-                }
-            }
-
-            index = 0;
-            movedAfterRun = false;
             
-            if (errors == null || errors.all.Count < 1)
-            {
-                ui.problemInfoText.text = "No problems found";
-            }
-            else
-            {
-                ui.problemInfoText.text = $"{errors.all.Count} problems found";
-            }
-            ui.problemInfoText.fontSize = 12;
-            ui.problemInfoText.GetComponent<RectTransform>().sizeDelta = new Vector2(190, 50);
-            //NextBlock(0);
+        } else
+        {
+            // convert manually like V3 does 
+            var allNotes = notesContainer.MapObjects.Where(
+                it => it is BaseNote baseNote && baseNote.Type != 3).OrderBy(it => it.JsonTime).ToList();
+            var allBombs = notesContainer.MapObjects.Where(
+                it => it is BaseNote baseNote && baseNote.Type is 3).OrderBy(it => it.JsonTime).ToList();
+            var allWalls = wallsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allEvents = eventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allCustomEvents = customEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            var allBpmEvents = bpmEventsContainer.MapObjects.OrderBy(it => it.JsonTime).ToList();
+            errors = check.PerformCheck(allNotes, allBombs, new List<BaseArc>(), new List<BaseChain>(), allEvents, allWalls, allCustomEvents, allBpmEvents, vals).Commit();
         }
-        catch (Exception e) { Debug.LogError(e.Message + e.StackTrace); }
+
+        // Highlight blocks in loaded containers in case we don't scrub far enough with MoveToTimeInBeats to load them
+        foreach (var block in errors.errors)
+        {
+            if (BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).LoadedContainers.TryGetValue(block.note, out ObjectContainer container))
+            {
+                container.SetOutlineColor(Color.red);
+            }
+        }
+
+        foreach (var block in errors.warnings)
+        {
+            if (BeatmapObjectContainerCollection.GetCollectionForType(ObjectType.Note).LoadedContainers.TryGetValue(block.note, out ObjectContainer container))
+            {
+                container.SetOutlineColor(Color.yellow);
+            }
+        }
+
+        index = 0;
+        movedAfterRun = false;
+        
+        if (errors == null || errors.all.Count < 1)
+        {
+            ui.problemInfoText.text = "No problems found";
+        }
+        else
+        {
+            ui.problemInfoText.text = $"{errors.all.Count} problems found";
+        }
+        ui.problemInfoText.fontSize = 12;
+        ui.problemInfoText.GetComponent<RectTransform>().sizeDelta = new Vector2(190, 50);
+        //NextBlock(0);
+
     }
 
     public void NextBlock(int offset = 1)
